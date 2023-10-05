@@ -1,0 +1,14 @@
+$ python3.9 -m venv .venv
+$ source .venv/bin/activate
+$ pip install --upgrade setuptools pip
+$ pip install -r requirements/dev-requirements.txt
+$ django-admin startproject onlineishop .
+$ cd onlineishop/
+$ django-admin startapp customers
+$ django-admin startapp products
+$ django-admin startapp carts
+$ django-admin startapp cartitems
+$ django-admin startapp orders
+$ cd ..
+$ python manage.py migrate
+$ python manage.py createsuperuser --email admin@i-shop.com --username admin

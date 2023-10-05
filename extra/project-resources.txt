@@ -1,0 +1,22 @@
+https://pypi.org/project/djangorestframework/
+https://pypi.org/project/Django/
+
+https://www.djangoproject.com/
+https://www.djangoproject.com/download/
+Option 1: Get the latest official version
+The latest official version is 4.2.6 (LTS). Read the 4.2.6 release notes, then install it with pip:
+
+pip install Django==4.2.6
+
+
+
+
+https://www.django-rest-framework.org/
+Requirements
+REST framework requires the following:
+
+Python (3.6, 3.7, 3.8, 3.9, 3.10)
+Django (2.2, 3.0, 3.1, 3.2, 4.0, 4.1)
+We highly recommend and only officially support the latest patch release of each Python and Django series.
+
+https://www.django-rest-framework.org/tutorial/quickstart/
