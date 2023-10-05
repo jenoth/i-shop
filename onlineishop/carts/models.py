@@ -1,16 +1,16 @@
 from django.db import models
 
 from onlineishop.customers.models import Customer
-from onlineishop.products.models import Product
+from onlineishop.orders.models import Order
 
 
 class Cart(models.Model):
     """It is a temporary storage of an ordering process. This records should be removed once the
     customer finishes his order or if he or she ends the session or logout."""
 
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product, verbose_name="list of products")
-    quantity = models.IntegerField()
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, null=True, blank=True, on_delete=models.SET_NULL)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Cart of customer, {self.customer}"
+        return f"{self.id}, Shoppingcart of {self.customer}"

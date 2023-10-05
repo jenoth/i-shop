@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "onlineishop.customers",
     "onlineishop.products",
     "onlineishop.carts",
+    "onlineishop.cartitems",
     "onlineishop.orders",
     # default django apps
     "django.contrib.admin",
