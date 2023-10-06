@@ -25,7 +25,7 @@ urlpatterns = [
             [
                 path("", include("onlineishop.customers.urls")),
                 path("", include("onlineishop.products.urls")),
-                # path("", include("onlineishop.carts.urls")),
+                path("", include("onlineishop.carts.urls")),
                 # path("", include("onlineishop.orders.urls")),
             ]
         ),

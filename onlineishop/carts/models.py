@@ -13,4 +13,4 @@ class Cart(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.id}, Shoppingcart of {self.customer}"
+        return f"{self.id}, Shopping cart of {self.customer}"
