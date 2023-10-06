@@ -14,3 +14,9 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1, validators=[validate_positive])
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        unique_together = (
+            "cart",
+            "product",
+        )
