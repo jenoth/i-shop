@@ -7,12 +7,14 @@ from .models import CartItem as CartItemModel
 from .serializers import CartItemsResponseSerializer
 from ..carts.models import Cart as CartModel
 from ..products.models import Product as ProductModel
+from ..utils.decorators import active_cart_validator
 
 
-class CartItemAddView(generics.GenericAPIView):
+class CartItemCreateUpdateDeleteView(generics.GenericAPIView):
     def get_queryset(self, cart_id):
         return CartItemModel.objects.filter(cart_id=cart_id)
 
+    @active_cart_validator
     def post(self, request, customer_id, cart_id):
         """Single API to handle all bulk insertion, updating and deletion of cart items"""
         # if existing products(db) are not in request data, DELETE all. removed product
