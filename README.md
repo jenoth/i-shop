@@ -99,8 +99,9 @@ _*Documentation*_
 - [Django REST framework](https://www.django-rest-framework.org/)
  
 _*PyPI*_
-- [Django PyPI](https://pypi.org/project/Django/4.2.6/)
-- [Django REST framework PyPI](https://pypi.org/project/djangorestframework/)
+- [Django](https://pypi.org/project/Django/4.2.6/)
+- [Django REST framework](https://pypi.org/project/djangorestframework/)
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
 
 _*GitHub*_
 - [i-shop](https://github.com/jenoth/i-shop)
