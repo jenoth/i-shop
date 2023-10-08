@@ -10,9 +10,13 @@ from ..products.models import Product as ProductModel
 from ..utils.decorators import active_cart_validator
 
 
-class CartItemCreateUpdateDeleteView(generics.GenericAPIView):
+class CartItemCRUDView(generics.GenericAPIView):
     def get_queryset(self, cart_id):
         return CartItemModel.objects.filter(cart_id=cart_id)
+
+    def get(self, request, customer_id, cart_id):
+        """GET controller to retrieve all cart items"""
+        return self._get_cart_items_response(cart_id)
 
     @active_cart_validator
     def post(self, request, customer_id, cart_id):
@@ -53,10 +57,13 @@ class CartItemCreateUpdateDeleteView(generics.GenericAPIView):
             item.quantity = request_data_dict[item.product_id]
         CartItemModel.objects.bulk_update(products_to_bulk_update, ["quantity"])
 
+        return self._get_cart_items_response(cart_id)
+
+    def _get_cart_items_response(self, cart_id):
         # generating the response
         response_products = []
         total_price_of_cart = decimal.Decimal()
-        for cart_item in self.get_queryset(self.kwargs["cart_id"]):
+        for cart_item in self.get_queryset(cart_id):
             no_of_ordered_product = cart_item.quantity
             unit_price_of_ordered_product = cart_item.product.price
             total_price_of_ordered_product = unit_price_of_ordered_product * no_of_ordered_product

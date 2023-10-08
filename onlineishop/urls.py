@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from onlineishop.cartitems.views import CartItemCreateUpdateDeleteView
+from onlineishop.cartitems.views import CartItemCRUDView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -32,7 +32,7 @@ urlpatterns = [
                 # path("", include("onlineishop.orders.urls")),
                 path(
                     "customers/<int:customer_id>/carts/<int:cart_id>/products/",
-                    CartItemCreateUpdateDeleteView.as_view(),
+                    CartItemCRUDView.as_view(),
                 ),
             ]
         ),
