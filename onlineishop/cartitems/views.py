@@ -1,17 +1,19 @@
+import decimal
+
 from rest_framework import generics
 from rest_framework.response import Response
 
 from .models import CartItem as CartItemModel
-from .serializers import CartItemSerializer
+from .serializers import CartItemsResponseSerializer
 from ..carts.models import Cart as CartModel
 from ..products.models import Product as ProductModel
 
 
 class CartItemAddView(generics.GenericAPIView):
-    queryset = CartItemModel.objects.all()
-    serializer_class = CartItemSerializer
+    def get_queryset(self, cart_id):
+        return CartItemModel.objects.filter(cart_id=cart_id)
 
-    def post(self, request, cart_id):
+    def post(self, request, customer_id, cart_id):
         """Single API to handle all bulk insertion, updating and deletion of cart items"""
         # if existing products(db) are not in request data, DELETE all. removed product
         # if existing products(db) are available in request data, UPDATE all. existing product. to be updated
@@ -40,8 +42,6 @@ class CartItemAddView(generics.GenericAPIView):
 
         # Perform bulk insertion
         _ = CartItemModel.objects.bulk_create(objects_to_insert)
-        cart_items_query_set = CartItemModel.objects.all()
-        cart_items_serializer = self.serializer_class(cart_items_query_set, many=True)
 
         # Perform bulk updating
         filter_condition = {"cart": cart_id, "product__in": products_to_update}
@@ -51,10 +51,27 @@ class CartItemAddView(generics.GenericAPIView):
             item.quantity = request_data_dict[item.product_id]
         CartItemModel.objects.bulk_update(products_to_bulk_update, ["quantity"])
 
+        # generating the response
+        response_products = []
+        total_price_of_cart = decimal.Decimal()
+        for cart_item in self.get_queryset(self.kwargs["cart_id"]):
+            no_of_ordered_product = cart_item.quantity
+            unit_price_of_ordered_product = cart_item.product.price
+            total_price_of_ordered_product = unit_price_of_ordered_product * no_of_ordered_product
+            response_products.append(
+                {
+                    "id": cart_item.product.id,
+                    "name": cart_item.product.name,
+                    "unit_price": unit_price_of_ordered_product,
+                    "quantity": no_of_ordered_product,
+                    "total_price": total_price_of_ordered_product,
+                }
+            )
+            total_price_of_cart += total_price_of_ordered_product
+
         return Response(
             {
-                "status": "success",
-                "status_code": 200,
-                "items": cart_items_serializer.data,
+                "cart_total": str(total_price_of_cart),
+                "products": CartItemsResponseSerializer(response_products, many=True).data,
             }
         )
