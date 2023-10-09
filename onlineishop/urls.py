@@ -15,6 +15,41 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
-urlpatterns = [path("admin/", admin.site.urls)]
+from onlineishop.cartitems.views import CartItemCRUDView
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="I-SHOP OpenAPI Specification (OAS)",
+        default_version="v1",
+        description="Open API(Swagger UI) definitions for I-SHOP",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path(
+        "api/v1/",
+        include(
+            [
+                path("", include("onlineishop.customers.urls")),
+                path("", include("onlineishop.products.urls")),
+                path("", include("onlineishop.carts.urls")),
+                # path("", include("onlineishop.cartitems.urls")),
+                # path("", include("onlineishop.orders.urls")),
+                path(
+                    "customers/<int:customer_id>/carts/<int:cart_id>/products/",
+                    CartItemCRUDView.as_view(),
+                ),
+            ]
+        ),
+    ),
+    path("ui/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+]
