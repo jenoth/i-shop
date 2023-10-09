@@ -56,10 +56,15 @@ Simple ecommerce system using Django and Django REST framework
 
 ### System Used for development (OS, Ubuntu 20.04.6 LTS)
 
-### Python version used
+### Python version used (required Python 3.8+)
 [Python 3.9.8](https://docs.python.org/3.9/)
 
 ### Local Setup
+#### Run the Docker locally using Makefile
+```
+make build-and-run-docker-locally
+```
+
 #### Virtual environment setup and installing the requirements
 ```
 $ python3.9 -m venv .venv
