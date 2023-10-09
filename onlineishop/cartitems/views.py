@@ -1,11 +1,12 @@
 import decimal
 
 from django.core.exceptions import ValidationError
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import CartItem as CartItemModel
-from .serializers import CartItemsResponseSerializer
+from .serializers import CartItemsResponseSerializer, CartItemsRequestBodySerializer
 from ..carts.models import Cart as CartModel
 from ..products.models import Product as ProductModel
 from ..utils.decorators import active_cart_validator
@@ -17,11 +18,15 @@ class CartItemCRUDView(generics.GenericAPIView):
     def get_queryset(self, cart_id):
         return CartItemModel.objects.filter(cart_id=cart_id)
 
+    @swagger_auto_schema(responses={200: CartItemsResponseSerializer()})
     def get(self, request, customer_id, cart_id):
         """GET controller to retrieve all cart items"""
         return self._get_cart_items_response(cart_id)
 
     @active_cart_validator
+    @swagger_auto_schema(
+        request_body=CartItemsRequestBodySerializer(many=True), responses={200: CartItemsResponseSerializer()}
+    )
     def post(self, request, customer_id, cart_id):
         """Single API to handle all bulk insertion, updating and deletion of cart items"""
         # if existing products(db) are not in request data, DELETE all. removed product
@@ -64,13 +69,13 @@ class CartItemCRUDView(generics.GenericAPIView):
 
     def _get_cart_items_response(self, cart_id):
         # generating the response
-        response_products = []
+        products_in_the_cart = []
         total_price_of_cart = decimal.Decimal()
         for cart_item in self.get_queryset(cart_id):
             no_of_ordered_product = cart_item.quantity
             unit_price_of_ordered_product = cart_item.product.price
             total_price_of_ordered_product = unit_price_of_ordered_product * no_of_ordered_product
-            response_products.append(
+            products_in_the_cart.append(
                 {
                     "id": cart_item.product.id,
                     "name": cart_item.product.name,
@@ -82,10 +87,12 @@ class CartItemCRUDView(generics.GenericAPIView):
             total_price_of_cart += total_price_of_ordered_product
 
         return Response(
-            {
-                "cart_total": str(total_price_of_cart),
-                "products": CartItemsResponseSerializer(response_products, many=True).data,
-            }
+            CartItemsResponseSerializer(
+                {
+                    "cart_total": str(total_price_of_cart),
+                    "products": products_in_the_cart,
+                }
+            ).data
         )
 
     def handle_exception(self, exc):
