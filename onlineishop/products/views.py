@@ -37,8 +37,6 @@ class Products(generics.GenericAPIView):
         serializer = self.serializer_class(products_query_set[start_num:end_num], many=True)
         return Response(
             {
-                "status": "success",
-                "status_code": 200,
                 "total_products": no_of_carts,
                 "current_page": page_num,
                 "last_page": math.ceil(no_of_carts / limit_num),
