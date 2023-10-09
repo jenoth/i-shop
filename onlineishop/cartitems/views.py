@@ -1,6 +1,7 @@
 import decimal
 
-from rest_framework import generics
+from django.core.exceptions import ValidationError
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import CartItem as CartItemModel
@@ -86,3 +87,33 @@ class CartItemCRUDView(generics.GenericAPIView):
                 "products": CartItemsResponseSerializer(response_products, many=True).data,
             }
         )
+
+    def handle_exception(self, exc):
+        if isinstance(exc, ValueError):
+            error_response_data = {
+                "type": "/errors/value-error",
+                "title": "Value Error ",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "detail": str(exc),
+                "instance": "trace_id",
+            }
+            return Response(data=error_response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if isinstance(exc, ValidationError):
+            error_response_data = {
+                "type": "/errors/validation-error",
+                "title": "Validation Error",
+                "status": status.HTTP_400_BAD_REQUEST,
+                "detail": str(exc),
+                "instance": "trace_id",
+            }
+            return Response(data=error_response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        error_response_data = {
+            "type": "/errors/common-exception",
+            "title": "Unhandled Exception",
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "detail": str(exc),
+            "instance": "trace_id",
+        }
+        return Response(data=error_response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
