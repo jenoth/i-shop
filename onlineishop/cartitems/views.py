@@ -11,6 +11,8 @@ from ..utils.decorators import active_cart_validator
 
 
 class CartItemCRUDView(generics.GenericAPIView):
+    serializer_class = CartItemsResponseSerializer
+
     def get_queryset(self, cart_id):
         return CartItemModel.objects.filter(cart_id=cart_id)
 

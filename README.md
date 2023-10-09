@@ -64,6 +64,9 @@ Simple ecommerce system using Django and Django REST framework
 ```
 make build-and-run-docker-locally
 ```
+###### Open the browser and see the output
+- [OpenAPI Specification of our service](http://localhost:8000/ui/)
+- [Read the DOCs of our service](http://localhost:8000/redoc/)
 
 #### Virtual environment setup and installing the requirements
 ```
@@ -102,14 +105,17 @@ $ python manage.py migrate
 _*Documentation*_
 - [Django](https://www.djangoproject.com/)
 - [Django REST framework](https://www.django-rest-framework.org/)
+- [drf-yasg - Yet another Swagger generator](https://drf-yasg.readthedocs.io/en/stable/index.html)
  
 _*PyPI*_
 - [Django](https://pypi.org/project/Django/4.2.6/)
 - [Django REST framework](https://pypi.org/project/djangorestframework/)
 - [python-dotenv](https://pypi.org/project/python-dotenv/)
+- [drf-yasg](https://pypi.org/project/drf-yasg/)
+- [OpenAPI](https://www.openapis.org/)
 
 _*GitHub*_
-- [i-shop](https://github.com/jenoth/i-shop)
+- [i-shop](https://github.com/jenoth/i-shop) **-** _**latest code is available in dev branch**_
 
 <!--
 What I really achieved here. After long time, nearly 3 years I recap my serverside knowledge 

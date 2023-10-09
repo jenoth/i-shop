@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # django_rest_framework app
     "rest_framework",
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,21 @@ WSGI_APPLICATION = "onlineishop.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,  # Set to False if using token-based authentication
+    'JSON_EDITOR': True,
+    'api_version': '1.0',
+    'enabled_methods': ['get', 'post', 'put', 'patch', 'delete'],
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+}
 
 
 # Password validation
